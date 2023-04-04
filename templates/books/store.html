@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ store.name }}</title>
+</head>
+<body>
+    <h1>{{ store.name }}</h1>
+    <ul>
+        <li><strong>Books:</strong>
+            <ul>
+            {% for book in store.books.all %}
+                <li>{{ book }}</li>
+            {% empty %}
+                <li>No books listed</li>
+            {% endfor %}
+            </ul>
+        </li>
+    </ul>
+    <p><a href="{% url 'books:store_list' %}">Back to stores list</a></p>
+</body>
+</html>

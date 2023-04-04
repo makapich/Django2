@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Pages</th>
+                <th>Price</th>
+                <th>Rating</th>
+                <th>Publication Date</th>
+                <th>Publisher</th>
+                <th>Authors</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td><a href="{% url 'books:book' pk=book.pk %}">{{ book.name }}</a></td>
+                <td>{{ book.pages }}</td>
+                <td>{{ book.price }}</td>
+                <td>{{ book.rating }}</td>
+                <td>{{ book.pubdate }}</td>
+                <td>{{ book.publisher }}</td>
+                <td>
+                    {% for author in book.authors.all %}
+                    {{ author }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
