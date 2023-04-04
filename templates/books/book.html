@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ book.name }}</title>
+</head>
+<body>
+    <h1>{{ book.name }}</h1>
+    <ul>
+        <li><strong>Pages:</strong> {{ book.pages }}</li>
+        <li><strong>Price:</strong> {{ book.price }}</li>
+        <li><strong>Rating:</strong> {{ book.rating }}</li>
+        <li><strong>Publication Date:</strong> {{ book.pubdate }}</li>
+        <li><strong>Publisher:</strong> {{ book.publisher }}</li>
+        <li><strong>Authors:</strong>
+            <ul>
+            {% for author in book.authors.all %}
+                <li>{{ author }}</li>
+            {% empty %}
+                <li>No authors listed</li>
+            {% endfor %}
+            </ul>
+        </li>
+        <li><strong>Stores:</strong>
+            <ul>
+            {% for store in stores %}
+                <li>{{ store }}</li>
+            {% empty %}
+                <li>No stores listed</li>
+            {% endfor %}
+            </ul>
+        </li>
+    </ul>
+    <p><a href="{% url 'books:book_list' %}">Back to books list</a></p>
+</body>
+</html>

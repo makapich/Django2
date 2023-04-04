@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+</head>
+<body>
+    <h1>Welcome to the books app!</h1>
+    <ul>
+        <li><a href="{% url 'books:author_list' %}">All authors</a></li>
+        <li><a href="{% url 'books:book_list' %}">All books</a></li>
+        <li><a href="{% url 'books:publisher_list' %}">All publishers</a></li>
+        <li><a href="{% url 'books:store_list' %}">All stores</a></li>
+    </ul>
+</body>
+</html>
