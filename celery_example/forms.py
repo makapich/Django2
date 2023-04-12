@@ -14,6 +14,6 @@ class ReminderForm(forms.Form):
         now = timezone.now()
         plus_two_days = now + timedelta(days=2)
         reminding_datetime = self.cleaned_data['reminding_datetime']
-        if reminding_datetime < now or time > plus_two_days:
-            raise ValidationError('reminding_datetime error')
+        if reminding_datetime < now or reminding_datetime > plus_two_days:
+            raise ValidationError('Please select a date and time within the next 2 days.')
         return reminding_datetime
