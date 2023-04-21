@@ -6,6 +6,8 @@
 </head>
 <body>
     <h1>{{ book.name }}</h1>
+    <a href="{% url 'books:book_update' pk=book.pk %}">Update this book</a>
+    <a href="{% url 'books:book_delete' pk=book.pk %}">Delete this book</a>
     <ul>
         <li><strong>Pages:</strong> {{ book.pages }}</li>
         <li><strong>Price:</strong> {{ book.price }}</li>
