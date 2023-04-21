@@ -1,6 +1,12 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Prefetch
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
+from .forms import BookModelForm
 from .models import Author, Book, Publisher, Store
 
 
@@ -8,17 +14,49 @@ def index(request):
     return render(request, 'books/index.html')
 
 
-def book_list(request):
-    books = Book.objects.select_related('publisher').prefetch_related('authors').all()
-    return render(request, 'books/book_list.html', {'books': books})
+@method_decorator(cache_page(10), name='dispatch')
+class BookListView(ListView):
+    model = Book
+    template_name = 'books/book_list.html'
+    context_object_name = 'books'
+    queryset = Book.objects.select_related('publisher').prefetch_related('authors').all()
+    paginate_by = 400
 
 
-def book(request, pk):
-    book_obj = get_object_or_404(Book.objects.select_related('publisher'), pk=pk)
-    stores = Store.objects.filter(books=book_obj)
-    return render(request, 'books/book.html', {'book': book_obj, 'stores': stores})
+class BookDetailView(DetailView):
+    model = Book
+    template_name = 'books/book.html'
+    context_object_name = 'book'
+    queryset = Book.objects.select_related('publisher')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['stores'] = self.object.store_set.all()
+        return context
 
 
+class BookCreateView(LoginRequiredMixin, CreateView):
+    model = Book
+    form_class = BookModelForm
+    template_name = 'books/book_create.html'
+    success_url = reverse_lazy('books:book_list')
+
+
+class BookUpdateView(LoginRequiredMixin, UpdateView):
+    model = Book
+    form_class = BookModelForm
+    context_object_name = 'book'
+    template_name = 'books/book_update.html'
+    success_url = reverse_lazy('books:book_list')
+
+
+class BookDeleteView(LoginRequiredMixin, DeleteView):
+    model = Book
+    template_name = 'books/book_delete.html'
+    success_url = reverse_lazy('books:book_list')
+
+
+@cache_page(10)
 def author_list(request):
     authors = Author.objects.prefetch_related(
         Prefetch('book_set', queryset=Book.objects.only('name'))
